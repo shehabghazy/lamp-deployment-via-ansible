@@ -1,0 +1,23 @@
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    sha: v0.7.1
+    hooks:
+    -   id: check-added-large-files
+    -   id: check-json
+    -   id: check-xml
+    -   id: check-yaml
+    -   id: check-merge-conflict
+    -   id: flake8
+    -   id: check-symlinks
+-   repo: https://github.com/adarnimrod/ansible-pre-commit.git
+    sha: v0.6.0
+    hooks:
+    -   id: ansible-syntax-check
+-   repo: https://github.com/willthames/ansible-lint
+    sha: v3.4.12
+    hooks:
+    -   id: ansible-lint
+        files: tests/playbook.yml
+-   repo: https://github.com/adarnimrod/python-pre-commit.git
+    sha: v0.2.0
+    hooks:
+    -   id: piprot

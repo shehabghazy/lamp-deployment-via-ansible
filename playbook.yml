@@ -1,0 +1,12 @@
+- name: Deploy LAMP stack using Galaxy roles
+  hosts: localhost
+  become: yes
+  gather_facts: yes
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    # - ca-store
+    - adarnimrod.apache
+    - geerlingguy.php
+    - geerlingguy.mysql

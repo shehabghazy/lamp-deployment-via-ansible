@@ -1,0 +1,16 @@
+# vars/main.yml
+apache_listen_port: 80
+
+mysql_root_password: "adTewtrert345#%#$2134"
+mysql_databases:
+  - name: app_db
+
+mysql_users:
+  - name: app_user
+    host: "%"
+    password: "adTewtrert345#%#$2134"
+    priv: "app_db.*:ALL"
+
+php_packages:
+  - php
+  - php-mysql

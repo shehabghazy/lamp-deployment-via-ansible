@@ -1,0 +1,3 @@
+[submodule "library/shore"]
+	path = library/shore
+	url = https://git.shore.co.il/ansible/ansible-modules.git

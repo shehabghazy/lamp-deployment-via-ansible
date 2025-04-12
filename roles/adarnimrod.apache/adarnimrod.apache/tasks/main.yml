@@ -1,0 +1,84 @@
+---
+# tasks file for apache
+
+- name: Assertions
+  assert:
+    that:
+    - ansible_os_family == 'Debian'
+
+- name: Check if dhparams file exists
+  stat:
+    path: /etc/ssl/dhparams
+  register: stat_dhparams
+
+- name: APT install
+  apt:
+    name: [apache2, apache2-utils]
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Alias emails
+  when: apache_mail_alias is defined
+  lineinfile:
+      dest: /etc/aliases
+      create: yes
+      line: 'www-data: {{ apache_mail_alias }}'
+      regexp: 'www-data:'
+
+- name: Disable default site
+  file:
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+  notify:
+      - Restart Apache
+
+- name: Enable  modules
+  with_dict: '{{ apache_modules }}'
+  apache2_module:
+      name: '{{ item.key }}'
+      state: '{{ item.value }}'
+  notify:
+      - Restart Apache
+
+- name: Add configuration templates
+  with_fileglob:
+      - '{{ role_path }}/templates/apache/conf-enabled/*.conf'
+      - '{{ playbook_dir }}/templates/apache/conf-enabled/*.conf'
+  template:
+      src: '{{ item }}'
+      dest: '/etc/apache2/conf-enabled/{{ item|basename }}'
+      owner: root
+      group: 0
+      mode: 0o0644
+  notify:
+      - Restart Apache
+
+- name: Add sites templates
+  with_fileglob:
+      - '{{ role_path }}/templates/apache/sites-enabled/*.conf'
+      - '{{ playbook_dir }}/templates/apache/sites-enabled/*.conf'
+  template:
+      src: '{{ item }}'
+      dest: '/etc/apache2/sites-enabled/{{ item|basename }}'
+      owner: root
+      group: 0
+      mode: 0o0644
+  notify:
+      - Restart Apache
+
+- name: Validate config
+  command: apache2ctl configtest
+  changed_when: False
+
+- name: Enable service
+  service:
+      name: apache2
+      state: started
+      enabled: yes
+
+- meta: flush_handlers
+
+- name: Wait for Apache to recieve requests
+  wait_for:
+      port: 80

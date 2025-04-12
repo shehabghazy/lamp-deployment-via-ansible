@@ -1,0 +1,17 @@
+---
+# defaults file for apache
+apache_syslog: True
+apache_modules:
+    ssl: present
+    ratelimit: present
+    alias: present
+    dir: present
+    rewrite: absent
+    autoindex: present
+    env: present
+    headers: present
+    deflate: present
+    status: present
+    negotiation: present
+    reqtimeout: present
+apache_rate_limit: 512 # In KiB.

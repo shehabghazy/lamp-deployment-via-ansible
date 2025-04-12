@@ -1,0 +1,24 @@
+- name: Install Apache
+  block:
+    - apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Deploy sample index.php
+      template:
+        src: index.php.j2
+        dest: /var/www/html/index.php
+        mode: '0644'
+      notify: restart apache
+
+  rescue:
+    - name: Log Apache install failure
+      debug:
+        msg: "Apache installation failed"
+
+  # always:
+  #   - name: Ensure apache2 is enabled
+  #     systemd:
+  #       name: apache2
+  #       enabled: yes
